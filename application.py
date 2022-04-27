@@ -66,6 +66,14 @@ def files():
 
 @application.route('/file/count', methods=['GET'])
 def file_count():
+    if db.get("fileCount") is None:
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        cursor.execute("SELECT count(*) from file")
+        data = cursor.fetchone()
+        conn.close()
+        return jsonify({'result': 'success', 'count': data[0]})
+
     return jsonify({'result': 'success', 'count':db.get("fileCount")})
 
 if __name__ == '__main__':
